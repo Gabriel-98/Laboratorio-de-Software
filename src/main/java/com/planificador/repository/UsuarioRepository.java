@@ -1,9 +1,14 @@
 package com.planificador.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import com.planificador.entity.Usuario;
 
+@Repository
 public interface UsuarioRepository extends JpaRepository<Usuario,String> {
-	long countByClave(String clave);
+	long countByLink(String link);
+	List<Usuario> findByLink(String link);
 }

@@ -2,10 +2,15 @@ package com.planificador;
 
 import org.springframework.context.annotation.Configuration;
 
+import com.utilities.MessagesQueue;
+import com.utilities.PasswordEncoder;
+
 import org.springframework.context.annotation.Bean;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import org.modelmapper.ModelMapper;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class Configuracion {
@@ -18,6 +23,14 @@ public class Configuracion {
 	
 	@Bean
 	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder(BCryptPasswordEncoder.BCryptVersion.$2A);
+		return new PasswordEncoder();
+	}
+	
+	@Bean
+	public MessagesQueue messagesQueue(){
+		ExecutorService hilo = Executors.newFixedThreadPool(1);
+		MessagesQueue messagesQueue = new MessagesQueue();
+		hilo.execute(messagesQueue);
+		return messagesQueue;
 	}
 }

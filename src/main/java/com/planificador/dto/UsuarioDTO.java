@@ -9,6 +9,6 @@ public class UsuarioDTO {
 	private String password;
 	private Double saldo;
 	private String divisa;
-	private boolean habilitarSeparadorAutomatico;
-	private boolean habilitarSaldoEjecucion;
+	private Boolean habilitarSeparadorAutomatico;
+	private Boolean habilitarSaldoEjecucion;
 }

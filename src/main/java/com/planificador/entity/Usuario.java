@@ -33,16 +33,16 @@ public class Usuario {
 	private String divisa;
 	
 	@Column(name="habilitar_separador_automatico", nullable=false)
-	private boolean habilitarSeparadorAutomatico;
+	private Boolean habilitarSeparadorAutomatico;
 	
 	@Column(name="habilitar_saldo_ejecucion", nullable=false)
-	private boolean habilitarSaldoEjecucion;
+	private Boolean habilitarSaldoEjecucion;
 	
-	@Column(name="clave", nullable=true)
-	public String clave;
+	@Column(name="link", nullable=true)
+	public String link;
 	
 	@Column(name="conectado", nullable=false)
-	private boolean conectado;
+	private Boolean conectado;
 
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="usuario")
 	private List<Categoria> categorias;
