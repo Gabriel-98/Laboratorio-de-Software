@@ -126,6 +126,7 @@ public class UsuarioService {
 				array[i] = (char)('A' + c - 36);
 			}
 			String claveEnlace = new String(array);
+			usuario.setLink(claveEnlace);
 			
 			if(usuarioRepository.countByLink(claveEnlace) == 0){
 				// Se agrega el mensaje a la cola
@@ -134,7 +135,6 @@ public class UsuarioService {
 				text += " para cambiar la contraseña";
 				messagesQueue.add(email, subject, text);
 				
-				usuario.setLink(claveEnlace);
 				usuarioRepository.save(usuario);
 				return true;
 			}
