@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.planificador.dto.UsuarioDTO;
 import com.planificador.service.UsuarioService;
 
-@CrossOrigin(origins="http://localhost:4200", maxAge=3600)
+//@CrossOrigin(origins="http://localhost:4200", maxAge=3600)
 @RestController
 @RequestMapping("/usuarios")
 public class UsuarioController {
@@ -43,12 +43,17 @@ public class UsuarioController {
 		return usuarioService.solicitarCambioContraseña(email);
 	}
 	
+	@GetMapping("/validar-clave-enlace/{clave-enlace}")
+	public boolean validarClaveEnlace(@PathVariable("clave-enlace") String claveEnlace){
+		return usuarioService.validarClaveEnlace(claveEnlace);
+	}
+	
 	@PutMapping("/cambiar-contraseña/{clave-enlace}/{password}")
 	public boolean cambiarContraseña(@PathVariable("clave-enlace") String claveEnlace, @PathVariable("password") String password){
 		return usuarioService.cambiarContraseña(claveEnlace, password);
 	}
 	
-	@GetMapping("/login/{email}/{password}")
+	@PutMapping("/login/{email}/{password}")
 	public UsuarioDTO login(@PathVariable("email") String email, @PathVariable("password") String password){
 		return usuarioService.login(email, password);
 	}

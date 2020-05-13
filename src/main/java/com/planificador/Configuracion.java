@@ -15,6 +15,8 @@ import org.modelmapper.ModelMapper;
 @Configuration
 public class Configuracion {
 
+	private ExecutorService threadPool = Executors.newFixedThreadPool(1);
+	
 	@Bean
 	public ModelMapper modelMapper() {
 		ModelMapper modelMapper = new ModelMapper();
@@ -27,10 +29,9 @@ public class Configuracion {
 	}
 	
 	@Bean
-	public MessagesQueue messagesQueue(){
-		ExecutorService hilo = Executors.newFixedThreadPool(1);
+	public MessagesQueue messagesQueue(){	
 		MessagesQueue messagesQueue = new MessagesQueue();
-		hilo.execute(messagesQueue);
+		threadPool.execute(messagesQueue);
 		return messagesQueue;
 	}
 }

@@ -17,31 +17,31 @@ import javax.persistence.Column;
 public class Usuario {
 	
 	@Id
-	@Column(name="email", nullable=false)
+	@Column(name="email", nullable=false, updatable=false)
 	private String email;
 	
-	@Column(name="nombre", nullable=false)
+	@Column(name="nombre", nullable=false, updatable=true)
 	private String nombre;
 	
-	@Column(name="password", nullable=false)
+	@Column(name="password", nullable=false, updatable=true)
 	private String password;
 	
-	@Column(name="saldo", nullable=false)
+	@Column(name="saldo", nullable=false, updatable=true)
 	private Double saldo;
 	
-	@Column(name="divisa", nullable=false)
+	@Column(name="divisa", nullable=false, updatable=true)
 	private String divisa;
 	
-	@Column(name="habilitar_separador_automatico", nullable=false)
+	@Column(name="habilitar_separador_automatico", nullable=false, updatable=true)
 	private Boolean habilitarSeparadorAutomatico;
 	
-	@Column(name="habilitar_saldo_ejecucion", nullable=false)
+	@Column(name="habilitar_saldo_ejecucion", nullable=false, updatable=true)
 	private Boolean habilitarSaldoEjecucion;
 	
-	@Column(name="link", nullable=true)
+	@Column(name="link", nullable=true, updatable=true)
 	public String link;
 	
-	@Column(name="conectado", nullable=false)
+	@Column(name="conectado", nullable=false, updatable=true)
 	private Boolean conectado;
 
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="usuario")
