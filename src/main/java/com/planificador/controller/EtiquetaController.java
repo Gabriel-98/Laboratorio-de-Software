@@ -12,33 +12,33 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.planificador.dto.CategoriaDTO;
-import com.planificador.service.CategoriaService;
+import com.planificador.dto.EtiquetaDTO;
+import com.planificador.service.EtiquetaService;
 
 @RestController
-@RequestMapping("/categorias")
-public class CategoriaController {
-
+@RequestMapping("/etiquetas")
+public class EtiquetaController {
+	
 	@Autowired
-	CategoriaService categoriaService;
+	EtiquetaService etiquetaService;
 	
 	@PostMapping("/crear")
-	public CategoriaDTO crear(@RequestBody CategoriaDTO categoriaDTO){
-		return categoriaService.crear(categoriaDTO);
+	public EtiquetaDTO crear(@RequestBody EtiquetaDTO etiquetaDTO) {
+		return etiquetaService.crear(etiquetaDTO);
 	}
 	
 	@PutMapping("/editar")
-	public CategoriaDTO editar(@RequestBody CategoriaDTO categoriaDTO) {
-		return categoriaService.editar(categoriaDTO);
+	public EtiquetaDTO editar(@RequestBody EtiquetaDTO etiquetaDTO){
+		return etiquetaService.editar(etiquetaDTO);
 	}
 	
 	@DeleteMapping("/eliminar/{id}")
-	public Boolean eliminar(@PathVariable("id") Integer id){
-		return categoriaService.eliminar(id);
+	public boolean eliminar(@PathVariable("id") Integer id){
+		return etiquetaService.eliminar(id);
 	}
 	
-	@GetMapping("/listar/{tipo}/{email}")
-	public List<CategoriaDTO> listar(@PathVariable("tipo") String tipo, @PathVariable("email") String email){
-		return categoriaService.listar(tipo, email);
+	@GetMapping("/listar/{email}")
+	public List<EtiquetaDTO> listar(@PathVariable("email") String email){
+		return etiquetaService.listar(email);
 	}
 }

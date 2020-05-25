@@ -13,22 +13,16 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name="categorias")
-public class Categoria {
-
+@Table(name="etiquetas")
+public class Etiqueta {
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE)
 	@Column(name="id", nullable=false, updatable=false)
 	private Integer id;
-	
+
 	@Column(name="nombre", nullable=false, updatable=true)
 	private String nombre;
-	
-	@Column(name="tipo", nullable=false, updatable=false)
-	private String tipo;
-	
-	@Column(name="codigo_icono", nullable=true, updatable=true)
-	private String codigoIcono;
 	
 	@ManyToOne
 	@JoinColumn(name="email_usuario", referencedColumnName="email", nullable=false, updatable=false)

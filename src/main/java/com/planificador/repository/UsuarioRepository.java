@@ -9,6 +9,6 @@ import com.planificador.entity.Usuario;
 
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario,String> {
-	long countByLink(String link);
-	List<Usuario> findByLink(String link);
+	long countByCodigoRecuperacion(String codigoRecuperacion);
+	List<Usuario> findByCodigoRecuperacion(String codigoRecuperacion);
 }

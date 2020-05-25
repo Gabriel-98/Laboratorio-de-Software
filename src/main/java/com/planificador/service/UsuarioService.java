@@ -39,22 +39,21 @@ public class UsuarioService {
 
 		Optional<Usuario> optionalUsuario = usuarioRepository.findById(usuarioDTO.getEmail());
 		if(optionalUsuario.isPresent())
-		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ya existe un usuario con ese email");
+		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error! Ya existe un usuario con ese email");
 		Usuario usuario = modelMapper.map(usuarioDTO, Usuario.class);
 		
 		usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
+		if(usuarioDTO.getSaldo() == null)
 		usuario.setSaldo(0.00);
+		if(usuarioDTO.getDivisa() == null)
 		usuario.setDivisa("USD");
+		if(usuarioDTO.getHabilitarSeparadorAutomatico() == null)
 		usuario.setHabilitarSeparadorAutomatico(false);
+		if(usuarioDTO.getHabilitarSaldoEjecucion() == null)
 		usuario.setHabilitarSaldoEjecucion(false);
 		usuario.setConectado(true);
 		
-		Usuario usuarioRespuesta;
-		try{ usuarioRespuesta = usuarioRepository.save(usuario); }
-		catch(Exception e) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error! No se pudo registrar el usuario");
-		}
-		
+		Usuario usuarioRespuesta = usuarioRepository.save(usuario);		
 		UsuarioDTO usuarioRespuestaDTO = modelMapper.map(usuarioRespuesta, UsuarioDTO.class);
 		usuarioRespuestaDTO.setPassword(null);
 		return usuarioRespuestaDTO;
@@ -74,7 +73,7 @@ public class UsuarioService {
 		if(usuarioDTO.getNombre() != null)
 		usuario.setNombre(usuarioDTO.getNombre());
 		if(usuarioDTO.getPassword() != null)
-		usuario.setPassword(passwordEncoder.encode(usuarioDTO.getPassword())) ;
+		usuario.setPassword(passwordEncoder.encode(usuarioDTO.getPassword()));
 		if(usuarioDTO.getSaldo() != null)
 		usuario.setSaldo(usuarioDTO.getSaldo());
 		if(usuarioDTO.getDivisa() != null)
@@ -95,7 +94,7 @@ public class UsuarioService {
 		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error! El email es nulo");
 		
 		Optional<Usuario> optionalUsuario = usuarioRepository.findById(email);
-		if(optionalUsuario.isEmpty())
+		if(!optionalUsuario.isPresent())
 		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error! El usuario no existe");
 		
 		usuarioRepository.deleteById(email);
@@ -107,7 +106,7 @@ public class UsuarioService {
 		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error! El email es nulo");
 		
 		Optional<Usuario> optionalUsuario = usuarioRepository.findById(email);
-		if(optionalUsuario.isEmpty())
+		if(!optionalUsuario.isPresent())
 		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error! El usuario no existe");
 		
 		Usuario usuario = optionalUsuario.get();
@@ -116,7 +115,7 @@ public class UsuarioService {
 		int size = 20;
 		char[] array = new char[size];
 		while(true){
-			for(int i=0; i<size; i++) {
+			for(int i=0; i<size; i++){
 				int c = random.nextInt(62);
 				if(c < 10)
 				array[i] = (char)('0' + c);
@@ -125,14 +124,13 @@ public class UsuarioService {
 				else
 				array[i] = (char)('A' + c - 36);
 			}
-			String claveEnlace = new String(array);
-			usuario.setLink(claveEnlace);
+			String codigoRecuperacion = new String(array);
+			usuario.setCodigoRecuperacion(codigoRecuperacion);
 			
-			if(usuarioRepository.countByLink(claveEnlace) == 0){
+			if(usuarioRepository.countByCodigoRecuperacion(codigoRecuperacion) == 0){
 				// Se agrega el mensaje a la cola
 				String subject = "Solicitud de cambio de contraseña";
-				String text = "Ingrese al siguiente link 185.253.153.147:8080/recuperar-contraseña/" + usuario.getLink();
-				text += " para cambiar la contraseña";
+				String text = "Ingrese el siguiente codigo para recuperar la contraseña: " + usuario.getCodigoRecuperacion();
 				messagesQueue.add(email, subject, text);
 				
 				usuarioRepository.save(usuario);
@@ -141,30 +139,30 @@ public class UsuarioService {
 		}
 	}
 	
-	public boolean validarClaveEnlace(String claveEnlace) {
-		if(claveEnlace == null)
-		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error! Los datos no pueden ser nulos");
+	public boolean validarCodigoRecuperacion(String codigoRecuperacion){
+		if(codigoRecuperacion == null)
+		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error! El codigo es nulo");
 
-		List<Usuario> usuarios = usuarioRepository.findByLink(claveEnlace);
+		List<Usuario> usuarios = usuarioRepository.findByCodigoRecuperacion(codigoRecuperacion);
 		if(usuarios.isEmpty())
-		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error! Este enlace no existe");
+		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error! Este codigo no existe");
 		if(usuarios.size() >= 2)
 		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error! No es permitido cambiar la contraseña");
 		return true;
 	}
 	
-	public boolean cambiarContraseña(String claveEnlace, String password){
-		if(claveEnlace == null || password == null)
+	public boolean cambiarContraseña(String codigoRecuperacion, String password){
+		if(codigoRecuperacion == null || password == null)
 		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error! Los datos no pueden ser nulos");
 			
-		List<Usuario> usuarios = usuarioRepository.findByLink(claveEnlace);
+		List<Usuario> usuarios = usuarioRepository.findByCodigoRecuperacion(codigoRecuperacion);
 		if(usuarios.isEmpty())
-		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error! Este enlace no existe");
+		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error! Este codigo no existe");
 		if(usuarios.size() >= 2)
 		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error! No es permitido cambiar la contraseña");
 		Usuario usuario = usuarios.get(0);
 		usuario.setPassword(passwordEncoder.encode(password));
-		usuario.setLink(null);
+		usuario.setCodigoRecuperacion(null);
 		usuarioRepository.save(usuario);
 		return true;
 	}
@@ -191,10 +189,10 @@ public class UsuarioService {
 	
 	public boolean cerrarSesion(String email){
 		if(email == null)
-		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error! Los datos no pueden ser nulos");
+		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error! El email es nulo");
 		
 		Optional<Usuario> optionalUsuario = usuarioRepository.findById(email);
-		if(optionalUsuario.isEmpty())
+		if(!optionalUsuario.isPresent())
 		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error! No existe un usuario con ese email");
 
 		Usuario usuario = optionalUsuario.get();

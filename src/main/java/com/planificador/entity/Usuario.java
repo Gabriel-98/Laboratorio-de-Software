@@ -38,12 +38,15 @@ public class Usuario {
 	@Column(name="habilitar_saldo_ejecucion", nullable=false, updatable=true)
 	private Boolean habilitarSaldoEjecucion;
 	
-	@Column(name="link", nullable=true, updatable=true)
-	public String link;
+	@Column(name="codigo_recuperacion", nullable=true, updatable=true)
+	public String codigoRecuperacion;
 	
 	@Column(name="conectado", nullable=false, updatable=true)
 	private Boolean conectado;
 
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="usuario")
 	private List<Categoria> categorias;
+	
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="usuario")
+	private List<Etiqueta> etiquetas;
 }

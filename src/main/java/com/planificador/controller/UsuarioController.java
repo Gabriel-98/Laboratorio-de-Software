@@ -24,8 +24,7 @@ public class UsuarioController {
 	
 	@PostMapping("/registrar")
 	public UsuarioDTO registrar(@RequestBody UsuarioDTO usuarioDTO){
-		UsuarioDTO ans =  usuarioService.registrar(usuarioDTO);
-		return ans;
+		return usuarioService.registrar(usuarioDTO);
 	}
 	
 	@PutMapping("/editar")
@@ -43,14 +42,14 @@ public class UsuarioController {
 		return usuarioService.solicitarCambioContraseña(email);
 	}
 	
-	@GetMapping("/validar-clave-enlace/{clave-enlace}")
-	public boolean validarClaveEnlace(@PathVariable("clave-enlace") String claveEnlace){
-		return usuarioService.validarClaveEnlace(claveEnlace);
+	@GetMapping("/validar-codigo-recuperacion/{codigo-recuperacion}")
+	public boolean validarCodigoRecuperacion(@PathVariable("codigo-recuperacion") String codigoRecuperacion){
+		return usuarioService.validarCodigoRecuperacion(codigoRecuperacion);
 	}
 	
-	@PutMapping("/cambiar-contraseña/{clave-enlace}/{password}")
-	public boolean cambiarContraseña(@PathVariable("clave-enlace") String claveEnlace, @PathVariable("password") String password){
-		return usuarioService.cambiarContraseña(claveEnlace, password);
+	@PutMapping("/cambiar-contraseña/{codigo-recuperacion}/{password}")
+	public boolean cambiarContraseña(@PathVariable("codigo-recuperacion") String codigoRecuperacion, @PathVariable("password") String password){
+		return usuarioService.cambiarContraseña(codigoRecuperacion, password);
 	}
 	
 	@PutMapping("/login/{email}/{password}")
