@@ -12,8 +12,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.planificador.dto.GrupoDTO;
+import com.planificador.entity.Cuenta;
 import com.planificador.entity.Grupo;
 import com.planificador.entity.Usuario;
+import com.planificador.repository.CuentaRepository;
 import com.planificador.repository.GrupoRepository;
 import com.planificador.repository.UsuarioRepository;
 
@@ -25,6 +27,9 @@ public class GrupoService {
 	
 	@Autowired
 	GrupoRepository grupoRepository;
+	
+	@Autowired
+	CuentaRepository cuentaRepository;
 	
 	@Autowired
 	ModelMapper modelMapper;
@@ -61,6 +66,30 @@ public class GrupoService {
 		GrupoDTO grupoRespuestaDTO = modelMapper.map(grupoRespuesta, GrupoDTO.class);
 		return grupoRespuestaDTO;
 	}
+	
+	public boolean eliminar(Integer id){
+		if(id == null)
+		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error! El id es nulo");	
+		
+		
+		Optional<Grupo> optionalGrupo = grupoRepository.findById(id);
+		if(!optionalGrupo.isPresent())
+		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error! No existe un grupo con ese id");	
+		
+		Grupo grupo = optionalGrupo.get();	
+		List<Cuenta> cuentas = grupo.getCuentas();
+		
+		ListIterator<Cuenta> iterator = cuentas.listIterator();
+		while(iterator.hasNext()){
+			Cuenta cuenta = iterator.next();
+			cuenta.setGrupo(null);
+		}
+		grupoRepository.deleteById(id);
+		
+		cuentaRepository.saveAll(cuentas);		
+		return true;
+	}
+	
 	
 	public List<GrupoDTO> listar(String email){
 		if(email == null)

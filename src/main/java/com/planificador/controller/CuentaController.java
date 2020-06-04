@@ -1,13 +1,16 @@
 package com.planificador.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.planificador.dto.CuentaDTO;
-import com.planificador.dto.TarjetaCreditoDTO;
 import com.planificador.service.CuentaService;
 
 @RestController
@@ -22,8 +25,8 @@ public class CuentaController {
 		return cuentaService.crear(cuentaDTO);
 	}
 	
-	/*@PostMapping("crear/tarjeta-credito")
-	public TarjetaCreditoDTO crear(@RequestBody TarjetaCreditoDTO tarjetaCreditoDTO){
-		return (TarjetaCreditoDTO)(cuentaService.crear(tarjetaCreditoDTO));
-	}*/
+	@GetMapping("/listar/{email}")
+	public List<CuentaDTO> listar(@PathVariable("email") String email){
+		return cuentaService.listar(email);
+	}
 }

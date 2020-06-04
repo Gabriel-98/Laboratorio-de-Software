@@ -3,6 +3,7 @@ package com.planificador.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,10 +31,10 @@ public class GrupoController {
 		return grupoService.editar(grupoDTO);
 	}*/
 	
-	/*@DeleteMapping("/eliminar/{id}")
-	public GrupoDTO eliminar(@PathVariable Integer id) {
+	@DeleteMapping("/eliminar/{id}")
+	public boolean eliminar(@PathVariable Integer id) {
 		return grupoService.eliminar(id);
-	}*/
+	}
 	
 	@GetMapping("/listar/{email}")
 	public List<GrupoDTO> listar(@PathVariable("email") String email) {

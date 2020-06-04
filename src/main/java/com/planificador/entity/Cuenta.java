@@ -1,5 +1,6 @@
 package com.planificador.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import lombok.Data;
@@ -48,7 +50,13 @@ public class Cuenta {
 	@Column(name="tipo", nullable=false, updatable=false)
 	private String tipo;
 	
-	//private Grupo grupo;
+	@OneToOne(cascade=CascadeType.ALL)
+	@JoinColumn(name="tarjeta_credito", referencedColumnName="id")
+	private TarjetaCredito tarjetaCredito;
+	
+	@ManyToOne
+	@JoinColumn(name="id_grupo", referencedColumnName="id", nullable=true, updatable=true)
+	private Grupo grupo;
 	
 	@ManyToOne
 	@JoinColumn(name="email_usuario", referencedColumnName="email", nullable=false, updatable=false)
