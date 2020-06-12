@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,10 +27,10 @@ public class GrupoController {
 		return grupoService.crear(grupoDTO);
 	}
 	
-	/*@PutMapping("/editar")
+	@PutMapping("/editar")
 	public GrupoDTO editar(@RequestBody GrupoDTO grupoDTO) {
 		return grupoService.editar(grupoDTO);
-	}*/
+	}
 	
 	@DeleteMapping("/eliminar/{id}")
 	public boolean eliminar(@PathVariable Integer id) {

@@ -11,5 +11,5 @@ import com.planificador.entity.Usuario;
 @Repository
 public interface CuentaRepository extends JpaRepository<Cuenta,Integer> {
 	boolean existsByUsuarioAndNombre(Usuario usuario, String nombre);
-	List<Cuenta> findAllByUsuarioOrderByGrupoAsc(Usuario usuario);
+	List<Cuenta> findAllByUsuarioOrderByGrupoAscNombreAsc(Usuario usuario);
 }

@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class GrupoDTO {
-	private String id;
+	private Integer id;
 	private String nombre;
 	private Double saldo;
 	private String divisa;

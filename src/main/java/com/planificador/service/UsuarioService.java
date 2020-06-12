@@ -172,7 +172,7 @@ public class UsuarioService {
 		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error! Los datos no pueden ser nulos");
 		
 		Optional<Usuario> optionalUsuario = usuarioRepository.findById(email);
-		if(optionalUsuario.isEmpty())
+		if(!optionalUsuario.isPresent())
 		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error! No existe un usuario con ese email");
 		
 		Usuario usuario = optionalUsuario.get();
@@ -208,7 +208,7 @@ public class UsuarioService {
 		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error! Los datos no pueden ser nulos");
 		
 		Optional<Usuario> optionalUsuario = usuarioRepository.findById(email);
-		if(optionalUsuario.isEmpty())
+		if(!optionalUsuario.isPresent())
 		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error! No existe un usuario con ese email");
 		
 		Usuario usuario = optionalUsuario.get();

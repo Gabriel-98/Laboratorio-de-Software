@@ -2,6 +2,7 @@ package com.planificador;
 
 import org.springframework.context.annotation.Configuration;
 
+import com.utilities.CurrencyConverter;
 import com.utilities.MessagesQueue;
 import com.utilities.PasswordEncoder;
 
@@ -18,13 +19,13 @@ public class Configuracion {
 	private ExecutorService threadPool = Executors.newFixedThreadPool(1);
 	
 	@Bean
-	public ModelMapper modelMapper() {
+	public ModelMapper modelMapper(){
 		ModelMapper modelMapper = new ModelMapper();
 		return modelMapper;
 	}
 	
 	@Bean
-	public PasswordEncoder passwordEncoder() {
+	public PasswordEncoder passwordEncoder(){
 		return new PasswordEncoder();
 	}
 	
@@ -33,5 +34,10 @@ public class Configuracion {
 		MessagesQueue messagesQueue = new MessagesQueue();
 		threadPool.execute(messagesQueue);
 		return messagesQueue;
+	}
+	
+	@Bean
+	public CurrencyConverter currencyConverter(){
+		return new CurrencyConverter();
 	}
 }

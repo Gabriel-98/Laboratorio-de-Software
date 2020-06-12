@@ -39,13 +39,10 @@ public class Cuenta {
 	private String descripcion;
 	
 	@Column(name="habilitar_cheques", nullable=false, updatable=true)
-	private boolean habilitarCheques;
+	private Boolean habilitarCheques;
 	
 	@Column(name="adicionar_patrimonio_neto", nullable=false, updatable=true)
-	private boolean adicionarPatrimonioNeto;
-	
-	@Column(name="archivada", nullable=false, updatable=false)
-	private boolean archivada;
+	private Boolean adicionarPatrimonioNeto;
 	
 	@Column(name="tipo", nullable=false, updatable=false)
 	private String tipo;
