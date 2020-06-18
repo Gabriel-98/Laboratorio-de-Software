@@ -20,6 +20,7 @@ import com.planificador.entity.Ajuste;
 import com.planificador.entity.Cuenta;
 import com.planificador.entity.Grupo;
 import com.planificador.entity.Transaccion;
+import com.planificador.entity.Transferencia;
 import com.planificador.entity.Usuario;
 import com.planificador.repository.CuentaRepository;
 import com.planificador.repository.TransaccionRepository;
@@ -153,7 +154,7 @@ public class TransaccionService {
 	}
 	
 	public Boolean eliminar(Integer id){
-		/*if(id == null)
+		if(id == null)
 		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error! El id es nulo");
 		
 		Optional<Transaccion> optionalTransaccion = transaccionRepository.findById(id);
@@ -168,14 +169,60 @@ public class TransaccionService {
 			Grupo grupo = cuenta.getGrupo();
 			
 			if(cuenta.getAdicionarPatrimonioNeto()) {
+				cuenta.setSaldo(cuenta.getSaldo() - ajuste.getSaldoAdicional());
+				if(grupo != null){
+					try{
+						double saldoAdicionalGrupo = currencyConverter.convert(cuenta.getDivisa(), grupo.getDivisa(), ajuste.getSaldoAdicional());
+						grupo.setSaldo(grupo.getSaldo() - saldoAdicionalGrupo);
+					}catch(Exception e){ throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error! Ocurrio un problema al hacer conversion de divisas de " + cuenta.getDivisa() + " a " + grupo.getDivisa()); }
+				}
 				
+				try{
+					double saldoAdicionalUsuario = currencyConverter.convert(cuenta.getDivisa(), usuario.getDivisa(), ajuste.getSaldoAdicional());
+					usuario.setSaldo(usuario.getSaldo() - saldoAdicionalUsuario);
+				}catch(Exception e){ throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error! Ocurrio un problema al hacer conversion de divisas de " + cuenta.getDivisa() + " a " + usuario.getDivisa()); }
 			}
 			transaccionRepository.delete(transaccion);
 		}		
-		else if(transaccion.getTipo().equals("TRANSFERENCIA")) {
+		else if(transaccion.getTipo().equals("TRANSFERENCIA")){
+			Transferencia transferencia = transaccion.getTransferencia();
+			Cuenta cuentaOrigen = transferencia.getCuentaOrigen();
+			Cuenta cuentaDestino = transferencia.getCuentaDestino();
+			Usuario usuario = cuentaOrigen.getUsuario();
+			Grupo grupoOrigen = cuentaOrigen.getGrupo();
+			Grupo grupoDestino = cuentaDestino.getGrupo();
+			cuentaOrigen.setSaldo(cuentaOrigen.getSaldo() + transferencia.getCantidadEnviada());
+			cuentaDestino.setSaldo(cuentaDestino.getSaldo() - transferencia.getCantidadRecibida());
 			
-		}*/
-		
+			if(cuentaOrigen.getAdicionarPatrimonioNeto()){
+				if(grupoOrigen != null){
+					try{
+						double saldoAdicionalGrupo = currencyConverter.convert(cuentaOrigen.getDivisa(), grupoOrigen.getDivisa(), transferencia.getCantidadEnviada());
+						grupoOrigen.setSaldo(grupoOrigen.getSaldo() + saldoAdicionalGrupo);
+					}catch(Exception e){ throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error! Ocurrio un problema al hacer conversion de divisas de " + cuentaOrigen.getDivisa() + " a " + grupoOrigen.getDivisa()); }
+				}
+				
+				try{
+					double saldoAdicionalUsuario = currencyConverter.convert(cuentaOrigen.getDivisa(), usuario.getDivisa(), transferencia.getCantidadEnviada());
+					usuario.setSaldo(usuario.getSaldo() + saldoAdicionalUsuario);
+				}catch(Exception e){ throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error! Ocurrio un problema al hacer conversion de divisas de " + cuentaOrigen.getDivisa() + " a " + usuario.getDivisa()); }
+			}
+			
+			if(cuentaDestino.getAdicionarPatrimonioNeto()){
+				if(grupoDestino != null){
+					try{
+						double saldoAdicionalGrupo = currencyConverter.convert(cuentaDestino.getDivisa(), grupoDestino.getDivisa(), transferencia.getCantidadRecibida());
+						grupoDestino.setSaldo(grupoDestino.getSaldo() - saldoAdicionalGrupo);
+					}catch(Exception e){ throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error! Ocurrio un problema al hacer conversion de divisas de " + cuentaDestino.getDivisa() + " a " + grupoDestino.getDivisa()); }
+				}
+				
+				try{
+					double saldoAdicionalUsuario = currencyConverter.convert(cuentaDestino.getDivisa(), usuario.getDivisa(), transferencia.getCantidadRecibida());
+					usuario.setSaldo(usuario.getSaldo() - saldoAdicionalUsuario);
+				}catch(Exception e){ throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error! Ocurrio un problema al hacer conversion de divisas de " + cuentaDestino.getDivisa() + " a " + usuario.getDivisa()); }
+			}
+			transaccionRepository.delete(transaccion);
+		}
 		return true;
 	}
 	
