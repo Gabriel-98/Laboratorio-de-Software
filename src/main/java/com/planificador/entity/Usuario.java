@@ -49,4 +49,7 @@ public class Usuario {
 	
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="usuario")
 	private List<Etiqueta> etiquetas;
+	
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="usuario")
+	private List<Transaccion> transacciones;
 }

@@ -7,7 +7,8 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper=true)
-@JsonTypeName("TARJETA-CREDITO")
-public class TarjetaCreditoDTO extends CuentaDTO {
-	private Double limiteCredito;
+@JsonTypeName("AJUSTE")
+public class AjusteDTO extends TransaccionDTO {
+	private Integer idCuenta;
+	private Double saldoAdicional;
 }

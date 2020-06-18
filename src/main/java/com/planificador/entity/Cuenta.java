@@ -1,5 +1,7 @@
 package com.planificador.entity;
 
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -58,4 +61,13 @@ public class Cuenta {
 	@ManyToOne
 	@JoinColumn(name="email_usuario", referencedColumnName="email", nullable=false, updatable=false)
 	private Usuario usuario;
+		
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="cuenta")
+	private List<Ajuste> ajustes;
+
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="cuentaOrigen")
+	private List<Transferencia> transferenciasEnviadas;
+	
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="cuentaDestino")
+	private List<Transferencia> transferenciasRecibidas;
 }
