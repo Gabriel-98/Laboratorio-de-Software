@@ -15,6 +15,7 @@ import com.planificador.dto.UsuarioDTO;
 import com.planificador.service.UsuarioService;
 
 //@CrossOrigin(origins="http://localhost:4200", maxAge=3600)
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/usuarios")
 public class UsuarioController {

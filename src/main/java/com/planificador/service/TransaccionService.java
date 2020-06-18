@@ -153,6 +153,29 @@ public class TransaccionService {
 	}
 	
 	public Boolean eliminar(Integer id){
+		/*if(id == null)
+		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error! El id es nulo");
+		
+		Optional<Transaccion> optionalTransaccion = transaccionRepository.findById(id);
+		if(!optionalTransaccion.isPresent())
+		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error! No existe una transaccion con ese id");
+		
+		Transaccion transaccion = optionalTransaccion.get();
+		if(transaccion.getTipo().equals("AJUSTE")){
+			Ajuste ajuste = transaccion.getAjuste();
+			Cuenta cuenta = ajuste.getCuenta();
+			Usuario usuario = cuenta.getUsuario();
+			Grupo grupo = cuenta.getGrupo();
+			
+			if(cuenta.getAdicionarPatrimonioNeto()) {
+				
+			}
+			transaccionRepository.delete(transaccion);
+		}		
+		else if(transaccion.getTipo().equals("TRANSFERENCIA")) {
+			
+		}*/
+		
 		return true;
 	}
 	
